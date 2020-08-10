@@ -1,5 +1,7 @@
 package com.zzxx.exam.ui;
 
+import com.zzxx.exam.controlle.ClientContext;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -13,6 +15,7 @@ import java.awt.event.WindowEvent;
  */
 public class LoginFrame extends JFrame {
     private static final long serialVersionUID = 1L;
+    private ClientContext context=new ClientContext();
 
     public LoginFrame() {
         init();
@@ -29,10 +32,10 @@ public class LoginFrame extends JFrame {
         setSize(300, 220);
         setLocationRelativeTo(null);
 
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-
+                System.exit(0);
             }
         });
     }
@@ -57,13 +60,14 @@ public class LoginFrame extends JFrame {
 
         login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                //点击登录按钮才能触发任务
+                context.login();     //控制器
             }
         });
 
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                System.exit(0);
             }
         });
         return p;
@@ -85,10 +89,12 @@ public class LoginFrame extends JFrame {
         return p;
     }
 
+    private JTextField idField;
     private JPanel createIdPane() {
         JPanel p = new JPanel(new BorderLayout(6, 0));
         p.add(BorderLayout.WEST, new JLabel("编号:"));
         JTextField idField = new JTextField();
+        this.idField=idField;
         p.add(BorderLayout.CENTER, idField);
 
         return p;
@@ -97,10 +103,12 @@ public class LoginFrame extends JFrame {
     /**
      * 简单工厂方法, 封装的复杂对象的创建过程, 返回一个对象实例
      */
+    private JPasswordField pwdField;  //组件成员变量
     private JPanel createPwdPane() {
         JPanel p = new JPanel(new BorderLayout(6, 0));
         p.add(BorderLayout.WEST, new JLabel("密码:"));
         JPasswordField pwdField = new JPasswordField();
+        this.pwdField=pwdField;
         pwdField.enableInputMethods(true);
         p.add(BorderLayout.CENTER, pwdField);
         return p;
@@ -108,5 +116,19 @@ public class LoginFrame extends JFrame {
 
     private JLabel message;
 
+    public JTextField getIdField() {    //获取该组件
+        return idField;
+    }
 
+    public JPasswordField getPwdField() {
+        return pwdField;
+    }
+
+    public void updateMessage(String message) {
+        this.message.setText(message);
+    }
+
+    public void setContext(ClientContext context) {
+        this.context = context;
+    }
 }

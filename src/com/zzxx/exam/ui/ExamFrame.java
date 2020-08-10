@@ -1,5 +1,9 @@
 package com.zzxx.exam.ui;
 
+import com.zzxx.exam.controlle.ClientContext;
+import com.zzxx.exam.entity.ExamInfo;
+import com.zzxx.exam.entity.QuestionInfo;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -8,10 +12,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExamFrame extends JFrame {
     // 选项集合, 方便答案读取的处理
     private Option[] options = new Option[4];
+    private ClientContext context;
+
+    public List<Integer> getSelects(){          //选项被选择
+        List<Integer> li=new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            if(options[i].isSelected()){
+                li.add(i);
+            }
+        }
+        return li;
+    }
+
+    public void clearSelects(QuestionInfo currentQuestionInfo){          //选项被选择
+        List<Integer> li=currentQuestionInfo.getUserAnswers();
+        for (int i = 0; i < 4; i++) {
+            options[i].setSelected(false);
+        }
+        for(Integer i:li){
+            options[i].setSelected(true);
+        }
+    }
+
+
+    public void setContext(ClientContext context) {
+        this.context = context;
+    }
 
     public ExamFrame() {
         init();
@@ -23,10 +55,10 @@ public class ExamFrame extends JFrame {
         setContentPane(createContentPane());
         setLocationRelativeTo(null);
 
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);       //窗口关闭
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {// 正在关闭的时候
-
+                System.exit(0);                        //窗口关闭
             }
         });
     }
@@ -44,13 +76,14 @@ public class ExamFrame extends JFrame {
 
         return pane;
     }
+    private JLabel examInfo;
 
     private JPanel createCenterPane() {
         JPanel pane = new JPanel(new BorderLayout());
         // 注意!
         JLabel examInfo = new JLabel("姓名:XXX 考试:XXX 考试时间:XXX", JLabel.CENTER);
+        this.examInfo=examInfo;
         pane.add(BorderLayout.NORTH, examInfo);
-
         pane.add(BorderLayout.CENTER, createQuestionPane());
         pane.add(BorderLayout.SOUTH, createOptionsPane());
         return pane;
@@ -113,23 +146,29 @@ public class ExamFrame extends JFrame {
 
         prev.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                context.prev();
             }
         });
 
         next.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                context.next();
             }
         });
 
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                context.send();
             }
         });
 
         return pane;
+    }
+
+    public void updateView(ExamInfo info, QuestionInfo currentQuestionInfo) {
+        this.examInfo.setText(info.toString());
+        questionArea.setText(currentQuestionInfo.toString());
+        questionCount.setText("题目:" + info.getQuestionCount() + " 的 " + (currentQuestionInfo.getQuestionIndex() + 1) + "题");
     }
 
     /**
@@ -163,6 +202,4 @@ public class ExamFrame extends JFrame {
         }
         timer.setText(time);
     }
-
-
 }

@@ -18,10 +18,10 @@ public class MsgFrame extends JFrame {
         setSize(600, 400);
         setContentPane(createContentPane());
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-
+//                System.exit(0);
             }
         });
     }

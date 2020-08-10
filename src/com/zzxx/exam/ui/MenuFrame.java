@@ -1,16 +1,25 @@
 package com.zzxx.exam.ui;
 
+import com.zzxx.exam.controlle.ClientContext;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * 主菜单界面
  */
 public class MenuFrame extends JFrame {
+
+    private ClientContext context;
+
+    public void setContext(ClientContext context) {
+        this.context = context;
+    }
 
     public MenuFrame() {
         init();
@@ -22,10 +31,10 @@ public class MenuFrame extends JFrame {
         setContentPane(createContentPane());
         setLocationRelativeTo(null);
 
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-
+//                System.exit(0);
             }
         });
     }
@@ -44,6 +53,11 @@ public class MenuFrame extends JFrame {
         return pane;
     }
     private JLabel info; // 记录用户的信息
+
+    public JLabel getInfo() {
+        return info;
+    }
+
     private JPanel createMenuPane() {
         JPanel pane = new JPanel(new BorderLayout());
         // 务必将 info 引用到界面控件对象
@@ -71,19 +85,28 @@ public class MenuFrame extends JFrame {
 
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    context.start();
+                    context.daoJiShi();
+                } catch (IOException | InterruptedException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         });
 
         msg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-
+                try {
+                    context.showRule();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                System.exit(0);
             }
         });
 
@@ -103,7 +126,4 @@ public class MenuFrame extends JFrame {
 
         return button;
     }
-
-
-
 }

@@ -6,7 +6,7 @@ import java.util.Objects;
 // entity 实体, 就是业务范畴中的具体名词
 public class User implements Serializable {
 
-    private int id;
+    private String id;
     private String name;
     private String password;
     private String phone;
@@ -16,14 +16,14 @@ public class User implements Serializable {
         super();
     }
 
-    public User(String name, int id, String password) {
+    public User(String name, String id, String password) {
         super();
         this.name = name;
         this.id = id;
         this.password = password;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -35,7 +35,7 @@ public class User implements Serializable {
         return password;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
